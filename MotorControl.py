@@ -14,7 +14,11 @@ pwm.setPWMFreq(60)
 #time.sleep(1)
 #pwm.setPWM(2,0,320)
 time.sleep(0.5)
+pwm.setPWM(2,0,330)
+time.sleep(0.5)
 pwm.setPWM(2,0,320)
+
+
 #while count < servo_max:	
 #	pwm.setPWM(0, 0, count)
 #	time.sleep(1)
