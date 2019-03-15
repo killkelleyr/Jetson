@@ -5,8 +5,11 @@ from PIL import Image
 from PIL import ImageTk
 from Adafruit_I2C import Adafruit_I2C
 import Adafruit_PWM_Servo_Driver
+import serial
     
 pwm = Adafruit_PWM_Servo_Driver.PWM(address=0x40, busnum=0)
+ser = serial.Serial('/dev/ttyACM0', baudrate = 500000)
+
 
 pwmPos = 2
 
@@ -45,6 +48,13 @@ def brake_action():
     
 def print_ESC():
     print("Current ESC Value:",escVal)
+	
+def serial_connect():
+	if ser.isOpen():
+		print("open: " + ser.portstr)
+		ser.write(b'S')
+	else:
+		print("connection failed")
 
 
 
@@ -60,6 +70,8 @@ stop =  ImageTk.PhotoImage(stopL)
     
 upBtn = tkinter.Button(root,  text="up", bg='green', image=up, command=up_action).grid(row=0,column=0)
 downBtn = tkinter.Button(root,  text="down", bg='green',  image=down, command=down_action).grid(row=2,column=0)
-brakeBtn = tkinter.Button(root, text="reset", bg='red', width = 100, height = 100, image=stop, command=brake_action).grid(row=0, column=4, rowspan=2)
-    
+brakeBtn = tkinter.Button(root, text="reset", bg='red', width = 100, height = 100, image=stop, command=brake_action).grid(row=1, column=4, rowspan=2)
+connectBtn = tkinter.Button(root, text="connect", width = 100, height = 100, command=serial_connect).grid(row=0, column=4)
+
+  
 root.mainloop()
