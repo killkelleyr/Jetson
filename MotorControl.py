@@ -11,9 +11,9 @@ servo_max = 570
 count = servo_min
 
 pwm.setPWMFreq(60)
-#time.sleep(1)
-#pwm.setPWM(2,0,320)
-time.sleep(0.5)
+time.sleep(1)
+pwm.setPWM(2,0,320)
+time.sleep(5)
 pwm.setPWM(2,0,330)
 time.sleep(0.5)
 pwm.setPWM(2,0,320)
