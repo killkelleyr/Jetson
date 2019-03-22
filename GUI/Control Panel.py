@@ -8,7 +8,6 @@ import Adafruit_PWM_Servo_Driver
 import serial
 from multiprocessing import Process, Manager, Value
 import math
-from functools import partial
 
     
 pwm = Adafruit_PWM_Servo_Driver.PWM(address=0x40, busnum=0)
