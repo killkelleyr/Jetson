@@ -15,23 +15,29 @@ pwm = Adafruit_PWM_Servo_Driver.PWM(address=0x40, busnum=0)
 
 
 
-pwmPos = 2
+pwmPosR = 0
+pwmPosL = 1
 
 minESC = 320
+pwm.setPWMFreq(60)
 time.sleep(1)
-pwm.setPWM(pwmPos,0,minESC)
+pwm.setPWM(pwmPosR,0,minESC)
+pwm.setPWM(pwmPosL,0,minESC)
+print("Initializing Motors")
 time.sleep(2)
 maxESC = 500
 brakeESC = 320
 UPDATE_RATE = 5000
 
-rpm=0    
-
+rpmRight=0    
+rpmLeft=0
 
 
 manager = Manager()
-val = manager.Value('i',0)
-rpm = manager.Value('i',0)
+valLeft = manager.Value('i',0)
+valRight = manager.Value('i',0)
+rpmRight = manager.Value('i',0)
+rpmLeft = manager.Value('i',0)
 
 connect = False
 escVal = minESC
@@ -39,11 +45,13 @@ escVal = minESC
 ser = None
 
 root = tkinter.Tk()
-val_new=tkinter.StringVar()
-val_new.set('RPM: '+'0')
+valRight_new=tkinter.StringVar()
+valLeft_new=tkinter.StringVar()
+valRight_new.set('Right RPM: '+'0')
+valLeft_new.set('Left RPM: '+'0')
 
 try:
-	ser = serial.Serial('/dev/ttyACM1', baudrate = 115200)
+	ser = serial.Serial('/dev/ttyACM0', baudrate = 115200)
 	if ser.isOpen():
 		print("open: " + ser.portstr)
 		ser.write(b'S')
@@ -59,24 +67,27 @@ def up_action():
     global escVal
     if(escVal < maxESC):
         escVal = escVal+1
-        pwm.setPWM(pwmPos, 0, escVal)
+        pwm.setPWM(pwmPosR, 0, escVal)
+	pwm.setPWM(pwmPosL, 0, escVal)
     print_ESC()
     
 def down_action():
     global escVal
     if(escVal > minESC):
         escVal = escVal-1
-        pwm.setPWM(pwmPos, 0, escVal)
+        pwm.setPWM(pwmPosR, 0, escVal)
+	pwm.setPWM(pwmPosL, 0, escVal)
     print_ESC()
     
 def brake_action():
-    global escVal
-    escVal = brakeESC
-    pwm.setPWM(pwmPos, 0, escVal)
-    print_ESC()
+	global escVal
+	escVal = brakeESC
+	pwm.setPWM(pwmPosR, 0, escVal)
+	pwm.setPWM(pwmPosL, 0, escVal)
+	print_ESC()
     
 def print_ESC():
-    print("Current ESC Value:",escVal)
+	print("Current ESC Value:",escVal)
 	
 def serial_connect():
 	global connect
@@ -99,34 +110,43 @@ def serial_connect():
 		ser.close()
 		connect = False
 
-def read_encoder(val, name=''):
+def read_encoder(valRight, valLeft):
 	while True:
 		X = ser.readline()
-		val.value += 1
+
+		if(X[:1]=="R"):
+			valRight.value += 1
+		if(X[:1] == "L"):
+			valLeft.value += 1
 
 def display_rpm():
 	while True:
-		oldVal=int(val.value)
+		oldValRight=int(valRight.value)
+		oldValLeft=int(valLeft.value)
+
 		time.sleep(1)
-		newVal=int(val.value)
-		rpm.value=(((float(newVal)-float(oldVal))/1024)*60)
-		#val_new.set(rpm.value)		
-		#partial(update_btn, rpm)
+		newValRight=int(valRight.value)
+		newValLeft=int(valLeft.value)
+
+		rpmRight.value=(((float(newValRight)-float(oldValRight))/1024)*60)
+		rpmLeft.value=(((float(newValLeft)-float(oldValLeft))/1024)*60)
+
+		valRight_new.set(rpmRight.value)
+		valLeft_new.set(rpmLeft.value)
 		
 
 def update_btn():
-	global rpm, val_new
-	val_new.set("RPM: "+str(int(rpm.value)))
-	#speedLbl.text(rpm)
-	print("rpm: {0}".format(int(rpm.value)))
+	global rpmRight, rpmLeft, valRight_new, valLeft_new
+	valRight_new.set("Right RPM: "+str(int(rpmRight.value)))
+	valLeft_new.set("Left Rpm: "+str(int(rpmLeft.value)))
+
 	root.after(500,update_btn)
 	
 
 def func3():
-	#root = tkinter.Tk()
 	global root
 	root.title("Command Center")
-	root.geometry("500x500")
+	root.geometry("500x550")
     
 	up = tkinter.PhotoImage(file="upArrow.png")
 	down = tkinter.PhotoImage(file="downArrow.png")
@@ -140,11 +160,11 @@ def func3():
 
 	
 
-	speedLbl = tkinter.Label(root, text="RPM: ",textvariable=val_new, width = 10, height=10).grid(row=0,column=5)
+	speedLblRight = tkinter.Label(root, text="Right RPM: ",textvariable=valRight_new, width = 10, height=5).grid(row=0,column=5)
+	speedLblLeft = tkinter.Label(root, text="Left RPM: ",textvariable=valLeft_new, width = 10, height=5).grid(row=1,column=5)
 
 	connectBtn = tkinter.Button(root, text="connect", width = 20, height = 20, command=serial_connect).grid(row=0, column=4)
 	
-	#update_btn()
   
 	root.after(1,update_btn)
 	root.mainloop()
@@ -155,7 +175,7 @@ def func3():
 
 
 
-p1 = Process(target=read_encoder, args=(val,'val'))
+p1 = Process(target=read_encoder, args=(valRight,valLeft))
 p1.start()
 p2 = Process(target=display_rpm)
 p2.start()
