@@ -13,8 +13,8 @@ pwm = Adafruit_PWM_Servo_Driver.PWM(address=0x40, busnum=0)
 
 pwmPosL = 1
 
-minESC = 2550
-pwm.setPWMFreq(500)
+minESC = 320
+pwm.setPWMFreq(60)
 
 time.sleep(1)
 pwm.setPWM(pwmPosL, 0, minESC)
@@ -22,12 +22,19 @@ time.sleep(2)
 #pwm.setPWM(pwmPosL,0,328)
 
 
-maxESC = 10000                                                                                                                 
-setRPM = 100
+maxESC = 350
+setRPM = 90
 
 manager = Manager()
 valLeft = manager.Value('i', 0)
 rpmLeft = manager.Value('i', 0)
+
+P = 3.3
+I = 0.1
+D = 0.0005
+
+integral = 0
+previous_error= 0
 
 ser = None
 
@@ -35,7 +42,7 @@ ser = None
 def serial_connect():
 	global ser
 	try:
-		ser = serial.Serial('/dev/ttyACM1', baudrate = 115200)
+		ser = serial.Serial('/dev/ttyACM0', baudrate = 115200)
 		if ser.isOpen():
 			print("open: " + ser.portstr)
 			ser.write(b'S')
@@ -64,37 +71,26 @@ def calculate_rpm():
 	while True:
 		oldValLeft=int(valLeft.value)
 
-		time.sleep(0.125)
+		time.sleep(0.5)
 		newValLeft=int(valLeft.value)
 
-		rpmLeft.value=(((float(newValLeft)-float(oldValLeft))/1024)*480)
+		rpmLeft.value=(((float(newValLeft)-float(oldValLeft))/1024)*120)
 		
 
 def adjust_motor():
-	global minESC, setRPM
-	print("Adjust Motor")
-	esc = minESC
 	while True:
-		print("Left"+str(int(rpmLeft.value)))
-		rpm = int(rpmLeft.value)
+		global integral
+		global previous_error
+		error = setRPM - rpmLeft.value
+		integral = integral + (error*.02)
+		derivative = (error -previous_error) / .02
+		escVal = P*error + I*integral + D*derivative
+		print("ESC" ,escVal)
+		set_esc(int(escVal))
+		time.sleep(0.75)
 
-		if(setRPM*0.75 <= rpm <= setRPM*1.25):
-			print("stay")
-
-		elif(rpm < (setRPM)):
-			if(esc<maxESC):
-	                	esc += 1
-				print("increase: "+str(esc))
-				set_esc(pwmPosL,esc)
-		elif(rpm > setRPM):
-			if(esc>minESC):
-				esc -= 1
-				print("decrease: "+str(esc))
-				set_esc(pwmPosL,esc)
-		time.sleep(0.045)
-
-def set_esc(pos,escVal):
-	pwm.setPWM(pos,0,escVal)
+def set_esc(escVal):
+	pwm.setPWM(pwmPosL,0,escVal)
 		
 
 

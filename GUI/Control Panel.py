@@ -3,8 +3,8 @@ import Tkinter as tkinter
 import time
 from PIL import Image
 from PIL import ImageTk
-from Adafruit_I2C import Adafruit_I2C
 import Adafruit_PWM_Servo_Driver
+
 import serial
 from multiprocessing import Process, Manager, Value
 import math
@@ -24,7 +24,7 @@ pwm.setPWM(pwmPosR,0,minESC)
 pwm.setPWM(pwmPosL,0,minESC)
 print("Initializing Motors")
 time.sleep(2)
-maxESC = 500
+maxESC = 355
 brakeESC = 320
 UPDATE_RATE = 5000
 
@@ -123,16 +123,39 @@ def display_rpm():
 		oldValRight=int(valRight.value)
 		oldValLeft=int(valLeft.value)
 
-		time.sleep(1)
+		time.sleep(0.125)
 		newValRight=int(valRight.value)
 		newValLeft=int(valLeft.value)
 
-		rpmRight.value=(((float(newValRight)-float(oldValRight))/1024)*60)
-		rpmLeft.value=(((float(newValLeft)-float(oldValLeft))/1024)*60)
+		rpmRight.value=(((float(newValRight)-float(oldValRight))/1024)*480)
+		rpmLeft.value=(((float(newValLeft)-float(oldValLeft))/1024)*480)
 
 		valRight_new.set(rpmRight.value)
 		valLeft_new.set(rpmLeft.value)
 		
+def adjust_motor():
+	global minESC, setRPM
+	print("Adjust Motor")
+	esc = minESC
+	while True:
+		print("Left"+str(int(rpmLeft.value)))
+		rpm = int(rpmLeft.value)
+
+		if(setRPM*0.75 <= rpm <= setRPM*1.25):
+			print("stay")
+
+		elif(rpm < (setRPM)):
+			if(esc<maxESC):
+	                	esc += 1
+				print("increase: "+str(esc))
+				set_esc(pwmPosL,esc)
+		elif(rpm > setRPM):
+			if(esc>minESC):
+				esc -= 1
+				print("decrease: "+str(esc))
+				set_esc(pwmPosL,esc)
+		time.sleep(0.25)
+
 
 def update_btn():
 	global rpmRight, rpmLeft, valRight_new, valLeft_new
@@ -159,8 +182,8 @@ def func3():
 
 	
 
-	speedLblRight = tkinter.Label(root, text="Right RPM: ",textvariable=valRight_new, width = 10, height=5).grid(row=0,column=5)
-	speedLblLeft = tkinter.Label(root, text="Left RPM: ",textvariable=valLeft_new, width = 10, height=5).grid(row=1,column=5)
+	speedLblRight = tkinter.Label(root, text="Right RPM: ",textvariable=valRight_new, width = 20, height=5).grid(row=0,column=5)
+	speedLblLeft = tkinter.Label(root, text="Left RPM: ",textvariable=valLeft_new, width = 20, height=5).grid(row=1,column=5)
 
 	connectBtn = tkinter.Button(root, text="connect", width = 20, height = 20, command=serial_connect).grid(row=0, column=4)
 	
