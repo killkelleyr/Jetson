@@ -4,7 +4,7 @@ import Adafruit_PWM_Servo_Driver
 
 pwm = Adafruit_PWM_Servo_Driver.PWM(address=0x40, busnum=0)
 
-pwm.setPWMFreq(500)
+pwm.setPWMFreq(1000)
 time.sleep(1)
 #pwm.setPWM(1,0,320)
 #time.sleep(1)
@@ -28,5 +28,5 @@ while True:
 	pwm.setPWM(0,on,off)
 	print("ON: ",on)
 	print("off: ",off)
-	off += 1
+	off += 100
 	time.sleep(0.5)
