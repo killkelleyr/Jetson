@@ -13,8 +13,8 @@ pwm = Adafruit_PWM_Servo_Driver.PWM(address=0x40, busnum=0)
 
 pwmPosL = 1
 
-minESC = 320
-pwm.setPWMFreq(60)
+minESC = 2554
+pwm.setPWMFreq(500)
 
 time.sleep(1)
 pwm.setPWM(pwmPosL, 0, minESC)
@@ -22,16 +22,16 @@ time.sleep(2)
 #pwm.setPWM(pwmPosL,0,328)
 
 
-maxESC = 350
-setRPM = 90
+maxESC = 2570
+setRPM = 10
 
 manager = Manager()
 valLeft = manager.Value('i', 0)
 rpmLeft = manager.Value('i', 0)
 
-P = 3.3
-I = 0.1
-D = 0.0005
+P = 25
+I = 1
+D = 1
 
 integral = 0
 previous_error= 0
@@ -71,10 +71,10 @@ def calculate_rpm():
 	while True:
 		oldValLeft=int(valLeft.value)
 
-		time.sleep(0.5)
+		time.sleep(0.125)
 		newValLeft=int(valLeft.value)
 
-		rpmLeft.value=(((float(newValLeft)-float(oldValLeft))/1024)*120)
+		rpmLeft.value=(((float(newValLeft)-float(oldValLeft))/1024)*480)
 		
 
 def adjust_motor():
@@ -82,12 +82,13 @@ def adjust_motor():
 		global integral
 		global previous_error
 		error = setRPM - rpmLeft.value
-		integral = integral + (error*.02)
-		derivative = (error -previous_error) / .02
-		escVal = P*error + I*integral + D*derivative
-		print("ESC" ,escVal)
+		integral = integral + (error*.125)
+		derivative = (error -previous_error) / .125
+		escVal = P*error + I*integral + D*derivative + 2050
+		previous_error = error
+		print("ESC" ,escVal) 
 		set_esc(int(escVal))
-		time.sleep(0.75)
+		time.sleep(0.125)
 
 def set_esc(escVal):
 	pwm.setPWM(pwmPosL,0,escVal)
