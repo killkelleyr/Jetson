@@ -4,7 +4,7 @@ import time
 from PIL import Image
 from PIL import ImageTk
 import Adafruit_PWM_Servo_Driver
-
+import socket
 import serial
 from multiprocessing import Process, Manager, Value
 import math

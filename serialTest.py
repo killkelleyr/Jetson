@@ -25,7 +25,7 @@ def calculate_speed(r_cm):
 
 
 
-ser = serial.Serial('/dev/ttyACM0', baudrate = 115200)
+ser = serial.Serial('/dev/ttyUSB0', baudrate = 9600)
 if ser.isOpen():
 	print "Open: " + ser.portstr
 	ser.write(b'S')
