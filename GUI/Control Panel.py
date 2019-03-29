@@ -50,7 +50,7 @@ valRight_new.set('Right RPM: '+'0')
 valLeft_new.set('Left RPM: '+'0')
 
 try:
-	ser = serial.Serial('/dev/ttyACM0', baudrate = 115200)
+	ser = serial.Serial('/dev/ttyACM', baudrate = 115200)
 	if ser.isOpen():
 		print("open: " + ser.portstr)
 		ser.write(b'S')
