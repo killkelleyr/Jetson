@@ -2,7 +2,7 @@ import time
 from Adafruit_I2C import Adafruit_I2C
 import Adafruit_PWM_Servo_Driver
 
-pwm = Adafruit_PWM_Servo_Driver.PWM(address=0x40, busnum=0)
+pwm = Adafruit_PWM_Servo_Driver.PWM(address=0x40, busnum=1)
 
 pwm.setPWMFreq(60)
 
