@@ -22,11 +22,9 @@ time.sleep(1)
 pwm.setPWM(pwmPosL, 0, minESC)
 pwm.setPWM(pwmPosR, 0, minESC)
 time.sleep(2)
-#pwm.setPWM(pwmPosL,0,328)
 
 
 maxESC=10000                                                                                                                 
-#setRPM = 100
 
 ser = None
 
