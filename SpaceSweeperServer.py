@@ -3,6 +3,7 @@ import socket
 import time
 from multiprocessing import Manager, Process
 
+#Define the server IP and Port to open
 HOST='192.168.1.198'
 PORT=5002
 s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -10,12 +11,13 @@ s.bind((HOST, PORT))
 s.listen(2)
 conn, addr=s.accept()
 
+#set the range of ESC values to send
 minESC = 2600.0
 maxESC = 3000.0
 
+#set the range of the triggers
 minThrottle = 0.0
 maxThrottle = 1023.0
-escValue = 0
 
 sep = ' '
 
