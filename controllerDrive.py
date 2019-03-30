@@ -12,6 +12,7 @@ s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST, PORT))
 sep = ' '
 pwmPosL = 1
+pwmPosR = 0
 
 minESC = 2550
 pwm.setPWMFreq(500)
@@ -19,6 +20,7 @@ pwm.setPWMFreq(500)
 print("Initialize")
 time.sleep(1)
 pwm.setPWM(pwmPosL, 0, minESC)
+pwm.setPWM(pwmPosR, 0, minESC)
 time.sleep(2)
 #pwm.setPWM(pwmPosL,0,328)
 
@@ -32,13 +34,19 @@ def get_controller():
 	data = 2554
 	while True:
 		buf = ''
-		while sep not in buf:
+		while len(buf) < 9:
 			buf += s.recv(8)
+		
 		try:
-			data = int(buf)
-			if(len(str(data)) > 3):
-				set_esc(pwmPosL,data)
-				print("ESC Value: "+str(data))
+			left,right=buf.split(",")
+			print("Left: "+left,right)
+			dataL = int(left)
+			dataR = int(right)
+			if(len(str(dataL)) > 3):
+				set_esc(pwmPosL,dataL)
+			if(len(str(dataR)) > 3):
+				set_esc(pwmPosR,dataR)
+				print("ESC Value: "+str(dataL)+","+str(dataR))
 		except:
 			data = data
 		
