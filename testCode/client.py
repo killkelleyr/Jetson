@@ -10,6 +10,7 @@ sep = ' '
 
 def get_controller():
 	data = 2554
+	print("Got to loop")
 	while True:
 		buf = ''
 		while len(buf) < 9:
