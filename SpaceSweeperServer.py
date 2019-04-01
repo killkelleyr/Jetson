@@ -12,12 +12,18 @@ s.listen(2)
 conn, addr=s.accept()
 
 #set the range of ESC values to send
-minESC = 2600.0
-maxESC = 3000.0
+minESC = 2550.0
+maxESC = 2800.0
+
+minESCRev = 2450
+maxESCRev = 2420
 
 #set the range of the triggers
-minThrottle = 0.0
-maxThrottle = 1023.0
+#minThrottle = 0.0
+#maxThrottle = 1023.0
+
+minThrottle = 9000.0
+maxThrottle = 32767.0
 
 sep = ' '
 
@@ -30,9 +36,14 @@ def gamepad():
 	while 1:
 		events = get_gamepad()
 		for event in events:
-			if(event.code == "ABS_Z"):
-				percentage = float(float(event.state)/maxThrottle)
-				escValLeft.value = (((maxESC-minESC)/(maxThrottle-minThrottle))*float(event.state) + minESC)
+			if(event.code == "ABS_Y"): #ABS_Z
+				if (event.state > 9000):
+					percentage = float(float(event.state)/maxThrottle)
+					escValLeft.value = (((maxESC-minESC)/(maxThrottle-minThrottle))*float(event.state) + minESC)
+				elif (event.state < -9000):
+					escValLeft.value = (((maxESCRev-minESCRev)/(maxThrottle-minThrottle))*float(abs(event.state)) + minESCRev+10)
+				else:
+					escValLeft.value = minESC
 
 			if(event.code == "ABS_RZ"):
 				percentage = float(event.state/maxThrottle)
