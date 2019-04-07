@@ -13,16 +13,16 @@ count = servo_min
 
 pwm.setPWMFreq(500)
 time.sleep(1)
-pwm.setPWM(1,0,2550)
+pwm.setPWM(0,0,2550)
 #pwm.setPWM(1,0,320)
 print("initializing")
 time.sleep(2)
 print("spining")
-pwm.setPWM(1,0,2610)
+pwm.setPWM(0,0,2610)
 #pwm.setPWM(1,0,330)
 time.sleep(5)
 print("Stop")
-pwm.setPWM(1,0,2550)
+pwm.setPWM(0,0,2550)
 #pwm.setPWM(1,0,320)
 
 #while count < servo_max:	

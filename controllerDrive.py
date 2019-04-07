@@ -11,8 +11,8 @@ PORT = 5002
 s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST, PORT))
 sep = ' '
-pwmPosL = 1
-pwmPosR = 2
+pwmPosL = 0
+pwmPosR = 1
 
 minESC = 2550
 pwm.setPWMFreq(500)
@@ -50,14 +50,15 @@ def get_controller():
 		dataR = int(right)
 		print("L ",dataL)
 		if (dataL != prevL) or (dataR != prevR):
-			pwm.setPWM(1,0,dataL)
-			pwm.setPWM(2,0,dataR)
+			#pwm.setPWM(pwmPosL,0,dataL)
+			#pwm.setPWM(pwmPosR,0,dataR)
+			set_esc(pwmPosL,dataL)
+			set_esc(pwmPosR,dataR)
 		prevL = dataL
 		prevR = dataR
-	#time.sleep(0.5)			
-#set_esc(pwmPosL, dataL)
-		#set_esc(pwmPosR, dataR)
-		
+	#time.sleep(0.5)
+def set_esc(pwmPos, data):
+	pwm.setPWM(pwmPos,0,data)
 
 """
 		try:
