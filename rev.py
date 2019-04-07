@@ -18,16 +18,17 @@ time.sleep(1)
 
 count = 2500
 print("starting rev")
-while count > 2450:
+while count > 2470:
 	pwm.setPWM(pwmPosL, 0, count)
 	print("val: "+str(count))
 	time.sleep(0.05)
 	count -= 1
 print("stop")
 pwm.setPWM(pwmPosL, 0, minESC)
-time.sleep(2)
+'''time.sleep(2)
 print("going forward")
 pwm.setPWM(pwmPosL, 0, 2610)
 time.sleep(2)
 print("stop")
 pwm.setPWM(pwmPosL, 0, minESC)
+'''
