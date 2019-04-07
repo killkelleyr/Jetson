@@ -10,6 +10,7 @@ HOST = '192.168.2.62'
 PORT = 5002
 s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST, PORT))
+
 sep = ' '
 pwmPosL = 0
 pwmPosR = 1
@@ -25,12 +26,14 @@ pwm.setPWM(pwmPosR, 0, minESC)
 
 
 maxESC=10000                                                                                                                 
-
+dataL = minESC
+dataR = minESC
 ser = None
 
 def get_controller():
-	prevL = 2550
-	prevR = 2550
+	global dataL
+	global dataR
+	
 	while True:
 		buf = ''
 		hold = ''
@@ -47,14 +50,10 @@ def get_controller():
 		dataL = int(left)
 		dataR = int(right)
 		#print("L ",dataL)
-
-		try:
+		prevR = 0
+		while dataR != prevR:
 			print("data R: "+str(dataR)+" L: "+str(dataL))
-			#set_esc(pwmPosL,dataL)
-			#set_esc(pwmPosR,dataR)
-		except:
-			print("Couldnt use R: "+str(dataR)+" L: "+str(dataL))
-			break
+			prevR = dataR
 		'''
 		if (dataL != prevL) or (dataR != prevR):
 			#pwm.setPWM(pwmPosL,0,dataL)
@@ -64,9 +63,18 @@ def get_controller():
 		prevL = dataL
 		prevR = dataR
 		'''
-	#time.sleep(0.5)
-def set_esc(pwmPos, data):
-	pwm.setPWM(pwmPos,0,data)
+	
+
+def set_esc(pwmPos, dataL, dataR):
+	prevL = 2550
+	prevR = 2550
+	if (dataL != prevL) or (dataR != prevR):
+			#pwm.setPWM(pwmPosL,0,dataL)
+			#pwm.setPWM(pwmPosR,0,dataR)
+			#set_esc(pwmPosL,dataL)
+			#set_esc(pwmPosR,dataR)
+		prevL = dataL
+		prevR = dataR
 
 """
 		try:
