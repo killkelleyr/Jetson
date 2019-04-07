@@ -6,7 +6,7 @@ from multiprocessing import Process, Manager, Value
 import socket
 data = 2554
 pwm = Adafruit_PWM_Servo_Driver.PWM(address=0x40, busnum=1)
-HOST = '192.168.1.196'
+HOST = '192.168.2.62'
 PORT = 5002
 s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST, PORT))
@@ -27,9 +27,6 @@ pwm.setPWM(pwmPosR, 0, minESC)
 maxESC=10000                                                                                                                 
 
 ser = None
-def set_esc(pos,escVal):
-	pwm.setPWM(pos,0,escVal)
-	return
 
 def get_controller():
 	prevL = 2550
@@ -39,6 +36,7 @@ def get_controller():
 		hold = ''
 		while len(buf) < 9:
 			hold = s.recv(1)
+			#print (hold)
 			if hold == '[':
 				pass
 			elif hold == ']':
@@ -48,7 +46,16 @@ def get_controller():
 		left,right = buf.split(',')
 		dataL = int(left)
 		dataR = int(right)
-		print("L ",dataL)
+		#print("L ",dataL)
+
+		try:
+			print("data R: "+str(dataR)+" L: "+str(dataL))
+			#set_esc(pwmPosL,dataL)
+			#set_esc(pwmPosR,dataR)
+		except:
+			print("Couldnt use R: "+str(dataR)+" L: "+str(dataL))
+			break
+		'''
 		if (dataL != prevL) or (dataR != prevR):
 			#pwm.setPWM(pwmPosL,0,dataL)
 			#pwm.setPWM(pwmPosR,0,dataR)
@@ -56,6 +63,7 @@ def get_controller():
 			set_esc(pwmPosR,dataR)
 		prevL = dataL
 		prevR = dataR
+		'''
 	#time.sleep(0.5)
 def set_esc(pwmPos, data):
 	pwm.setPWM(pwmPos,0,data)
