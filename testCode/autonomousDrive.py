@@ -33,16 +33,17 @@ def show_depth():
 	depth,timestamp = freenect.sync_get_depth()
 	depth = 255 * np.logical_and(depth >= current_depth - threshold, depth <= current_depth + threshold)
 	depth = depth.astype(np.uint8)
-	cv2.imshow('Depth', depth)
+	#cv2.imshow('Depth', depth)
 	count = cv2.countNonZero(depth)
+	print("White Pixels: ",count)
 
-	if (count>100000):
+	if (count>8000):
 		stop_Motors()
 	else:
 		move_Forward()
 
 def move_Forward():
-	print("Driving Forward")
+	#print("Driving Forward")
 	pwm.setPWM(pwmPosL,0,speed)
 	pwm.setPWM(pwmPosR,0,speed)
 	
@@ -54,13 +55,13 @@ def initiate_Rev():
 	time.sleep(0.05)
 	
 def move_Reverse():
-	print("Driving Backwards")
+	#print("Driving Backwards")
 	initiate_Rev()
 	pwm.setPWM(pwmPosL,0,2470)
 	pwm.setPWM(pwmPosR,0,2470)
 
 def turn_Left():
-	print("Turning Left")
+	#print("Turning Left")
 	initiate_Rev()
 	pwm.setPWM(pwmPosL,0,2475)
 	pwm.setPWM(pwmPosR,0,2665)
@@ -71,11 +72,11 @@ def turn_Right():
 	pwm.setPWM(pwmPosL,0,2685)
 	
 def stop_Motors():
-	print("Stopping Motors")
+	#print("Stopping Motors")
 	pwm.setPWM(pwmPosL,0,minESC)
 	pwm.setPWM(pwmPosR,0,minESC)
 
-cv2.namedWindow('Depth')
+#cv2.namedWindow('Depth')
 
 while 1:
 	show_depth()
