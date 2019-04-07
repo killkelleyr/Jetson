@@ -5,6 +5,9 @@ import freenect
 import cv2
 import numpy as np
 
+pwmPosL = 0
+pwmPosR = 1
+
 pwm = Adafruit_PWM_Servo_Driver.PWM(address=0x40,busnum=1)
 speed=2635
 escBrake = 2550
@@ -34,23 +37,43 @@ def show_depth():
 	count = cv2.countNonZero(depth)
 
 	if (count>100000):
-		print("Too Close Stop Motors")
-		#pwm.setPWM(0,0,escBrake)
-		#pwm.setPWM(1,0,escBrake)
+		stop_Motors()
 	else:
-		print("No objects in path continue on")
-		#pwm.setPWM(0,0,speed)
-		#pwm.setPWM(1,0,speed)
+		move_Forward()
 
 def move_Forward():
-	pwm.setPWM(0,0,speed)
-	pwm.setPWM(1,0,speed)
+	print("Driving Forward")
+	pwm.setPWM(pwmPosL,0,speed)
+	pwm.setPWM(pwmPosR,0,speed)
+	
+def initiate_Rev():
+	pwm.setPWM(pwmPosL,0,2450)
+	pwm.setPWM(pwmPosR,0,2450)
+	time.sleep(0.05)
+	stop_Motors()
+	time.sleep(0.05)
+	
+def move_Reverse():
+	print("Driving Backwards")
+	initiate_Rev()
+	pwm.setPWM(pwmPosL,0,2470)
+	pwm.setPWM(pwmPosR,0,2470)
 
 def turn_Left():
-	
+	print("Turning Left")
+	initiate_Rev()
+	pwm.setPWM(pwmPosL,0,2475)
+	pwm.setPWM(pwmPosR,0,2665)
 
 def turn_Right():
-
+	initiate_Rev()
+	pwm.setPWM(pwmPosR,0,2470)
+	pwm.setPWM(pwmPosL,0,2685)
+	
+def stop_Motors():
+	print("Stopping Motors")
+	pwm.setPWM(pwmPosL,0,minESC)
+	pwm.setPWM(pwmPosR,0,minESC)
 
 cv2.namedWindow('Depth')
 
@@ -60,19 +83,3 @@ while 1:
 		pwm.setPWM(0,0,escBrake)
 		pwm.setPWM(1,0,escBrake)
 		break
-
-'''
-pwm.setPWMFreq(500)
-time.sleep(1)
-pwm.setPWM(0,0,2550)
-pwm.setPWM(1,0,2550)
-print("Motors Initializing")
-time.sleep(2)
-print("Moving forward for "+str(timeDist)+" secs")
-pwm.setPWM(0,0,speed)
-pwm.setPWM(1,0,speed)
-time.sleep(timeDist)
-print("Stopping Motors")
-pwm.setPWM(0,0,2550)
-pwm.setPWM(1,0,2550)
-'''
