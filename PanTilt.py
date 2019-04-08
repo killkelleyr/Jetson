@@ -6,15 +6,15 @@ pwm = Adafruit_PWM_Servo_Driver.PWM(address=0x44, busnum=0)
 
 pwm.setPWMFreq(60)
 
-VERTservo_min = 390
-VERTservo_mid = 450 #Middle
-VERTservo_max = 560
+VERTservo_min = 190
+VERTservo_mid = 330 #Middle
+VERTservo_max = 450
 
 servo_min = 190
 servo_max = 590
 
 count = servo_max
-height = 390
+height = 190
 
 def pan_range(start, end, step):
 	while start != end:

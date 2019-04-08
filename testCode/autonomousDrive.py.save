@@ -13,7 +13,7 @@ speed=2635
 escBrake = 2550
 timeDist=2.5
 
-threshold =90
+threshold = 100
 current_depth = 600
 
 #threshold = 50
@@ -37,9 +37,9 @@ def show_depth():
 	count = cv2.countNonZero(depth)
 	print("White Pixels: ",count)
 
-	if (count>26500):
+	if (count>13000):
 		print("Stopping")
-		turn_Right()
+		stop_Motors()
 	else:
 		move_Forward()
 
@@ -69,9 +69,8 @@ def turn_Left():
 
 def turn_Right():
 	initiate_Rev()
-	pwm.setPWM(pwmPosR,0,2465)
+	pwm.setPWM(pwmPosR,0,2470)
 	pwm.setPWM(pwmPosL,0,2685)
-	time.sleep(0.25)
 	
 def stop_Motors():
 	#print("Stopping Motors")

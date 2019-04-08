@@ -1,7 +1,7 @@
 import time
 from Adafruit_I2C import Adafruit_I2C
 import Adafruit_PWM_Servo_Driver
-import serial
+#import serial
 from multiprocessing import Process, Manager, Value
 import socket
 data = 2554
@@ -49,32 +49,13 @@ def get_controller():
 		left,right = buf.split(',')
 		dataL = int(left)
 		dataR = int(right)
-		#print("L ",dataL)
-		prevR = 0
-		while dataR != prevR:
-			print("data R: "+str(dataR)+" L: "+str(dataL))
-			prevR = dataR
-		'''
-		if (dataL != prevL) or (dataR != prevR):
-			#pwm.setPWM(pwmPosL,0,dataL)
-			#pwm.setPWM(pwmPosR,0,dataR)
-			set_esc(pwmPosL,dataL)
-			set_esc(pwmPosR,dataR)
-		prevL = dataL
-		prevR = dataR
-		'''
+		set_esc(pwmPosL,dataL)
+		set_esc(pwmPosR,dataR)
+		
 	
 
-def set_esc(pwmPos, dataL, dataR):
-	prevL = 2550
-	prevR = 2550
-	if (dataL != prevL) or (dataR != prevR):
-			#pwm.setPWM(pwmPosL,0,dataL)
-			#pwm.setPWM(pwmPosR,0,dataR)
-			#set_esc(pwmPosL,dataL)
-			#set_esc(pwmPosR,dataR)
-		prevL = dataL
-		prevR = dataR
+def set_esc(pwmPos, data):
+	pwm.setPWM(pwmPos,0,data)
 
 """
 		try:
