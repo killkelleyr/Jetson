@@ -9,7 +9,7 @@ import RTIMU
 from multiprocessing import Process, Manager, Value
 import os.path
 import sys, getopt
-sys.append('.')
+sys.path.append('.')
 
 SETTINGS_FILE = "RTIMULib"
 print("Using settings file " + SETTINGS_FILE + ".ini")
