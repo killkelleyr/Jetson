@@ -7,7 +7,7 @@ import numpy as np
 import math
 import RTIMU
 from multiprocessing import Process, Manager, Value
-
+SETTINGS_FILE = "RTIMULib"
 print("Using settings file " + SETTINGS_FILE + ".ini")
 if not os.path.exists(SETTINGS_FILE + ".ini"):
   print("Settings file does not exist, will be created")
