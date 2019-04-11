@@ -116,7 +116,7 @@ def keep_straight():
 
 def drive():
 	while True:
-		if (whiteSpace.value > 26500)
+		if (whiteSpace.value > 26500):
 			print("Too close stopping")
 			stop_Motors()
 		else:
