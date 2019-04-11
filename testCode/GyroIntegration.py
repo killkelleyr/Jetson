@@ -131,6 +131,7 @@ def drive():
 		else:
 			#print("Keeping Straight")
 			#keep_straight()
+			break
 		if sys.stdin.read(1) == 32:
 			print("Stopping")
 		
