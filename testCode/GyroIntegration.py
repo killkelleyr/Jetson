@@ -36,8 +36,7 @@ speed=2635
 escBrake = 2550
 
 #Variables for kinect
-threshold =90
-current_depth = 600
+
 
 # Multiprocessing variables
 manager = Manager()
@@ -47,8 +46,8 @@ leftESC = manager.Value('i',2550)
 rightESC = manager.Value('i',2550)
 
 def show_depth():
-	global threshold
-	global current_depth
+	threshold =90
+	current_depth = 600
 	
 	depth,timestamp = freenect.sync_get_depth()
 	depth = 255 * np.logical_and(depth >= current_depth - threshold, depth <= current_depth + threshold)
