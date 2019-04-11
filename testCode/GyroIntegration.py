@@ -46,17 +46,18 @@ leftESC = manager.Value('i',2550)
 rightESC = manager.Value('i',2550)
 
 def show_depth():
-	threshold =90
-	current_depth = 600
+	while True:
+		threshold =90
+		current_depth = 600
 	
-	depth,timestamp = freenect.sync_get_depth()
-	depth = 255 * np.logical_and(depth >= current_depth - threshold, depth <= current_depth + threshold)
-	depth = depth.astype(np.uint8)
-	#cv2.imshow('Depth', depth)
-	count = cv2.countNonZero(depth)
-	print("inCount",count)
-	whiteSpace.value = count
-	print("White Pixels: ",count)
+		depth,timestamp = freenect.sync_get_depth()
+		depth = 255 * np.logical_and(depth >= current_depth - threshold, depth <= current_depth + threshold)
+		depth = depth.astype(np.uint8)
+		#cv2.imshow('Depth', depth)
+		count = cv2.countNonZero(depth)
+		print("inCount",count)
+		whiteSpace.value = count
+		#print("White Pixels: ",count)
 
 		
 def get_gyro():
@@ -124,7 +125,7 @@ def keep_straight():
 
 def drive():
 	while True:
-		#print("Whitness",whiteSpace.value)
+		print("Whitness",whiteSpace.value)
 		if (whiteSpace.value > 26500):
 			print("Too close stopping")
 			stop_Motors()
