@@ -73,8 +73,8 @@ def get_gyro():
 
 def move_Forward():
 	#print("Driving Forward")
-	pwm.setPWM(pwmPosL,0,2645)
-	pwm.setPWM(pwmPosR,0,2635)
+	pwm.setPWM(pwmPosL,0,2640)
+	pwm.setPWM(pwmPosR,0,2633)
 	
 def initiate_Rev():
 	pwm.setPWM(pwmPosL,0,2450)
