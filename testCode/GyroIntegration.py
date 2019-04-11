@@ -66,11 +66,9 @@ def get_gyro():
 		# x, y, z = imu.getFusionData()
 		# print("%f %f %f" % (x,y,z))
 			data = imu.getIMUData()
-			(data["pressureValid"], data["pressure"], data["pressureTemperatureValid"], data["pressureTemperature"]) = pressure.pressureRead()
-			(data["humidityValid"], data["humidity"], data["humidityTemperatureValid"], data["humidityTemperature"]) = humidity.humidityRead()
 			fusionPose = data["fusionPose"]
-		robotAngle.value = fusionPose[2]
-		print("Robot Angle: %f" % (math.degrees(math.degrees(fusionPose[2]))))
+			robotAngle.value = math.degrees(fusionPose[2])
+		print("Robot Angle: %f" % (robotAngle.value))
 		time.sleep(poll_interval*1.0/1000.0)
 
 def move_Forward():
