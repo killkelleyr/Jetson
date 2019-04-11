@@ -8,6 +8,10 @@ import math
 import RTIMU
 from multiprocessing import Process, Manager, Value
 
+print("Using settings file " + SETTINGS_FILE + ".ini")
+if not os.path.exists(SETTINGS_FILE + ".ini"):
+  print("Settings file does not exist, will be created")
+
 #IMU variables
 s = RTIMU.Settings(SETTINGS_FILE)
 imu = RTIMU.RTIMU(s)
