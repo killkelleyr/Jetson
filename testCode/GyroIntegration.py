@@ -7,6 +7,10 @@ import numpy as np
 import math
 import RTIMU
 from multiprocessing import Process, Manager, Value
+import os.path
+import sys, getopt
+sys.append('.')
+
 SETTINGS_FILE = "RTIMULib"
 print("Using settings file " + SETTINGS_FILE + ".ini")
 if not os.path.exists(SETTINGS_FILE + ".ini"):
