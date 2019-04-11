@@ -69,6 +69,7 @@ def get_gyro():
 			(data["pressureValid"], data["pressure"], data["pressureTemperatureValid"], data["pressureTemperature"]) = pressure.pressureRead()
 			(data["humidityValid"], data["humidity"], data["humidityTemperatureValid"], data["humidityTemperature"]) = humidity.humidityRead()
 			fusionPose = data["fusionPose"]
+		robotAngle.value = fusionPose[2]
 		print("Robot Angle: %f" % (math.degrees(math.degrees(fusionPose[2]))))
 		time.sleep(poll_interval*1.0/1000.0)
 
@@ -114,13 +115,17 @@ def initialize_Motors():
 	pwm.setPWM(0,0,escBrake)
 	pwm.setPWM(1,0,escBrake)
 	time.sleep(2)
+	print("Initialization Complete")
 
 def keep_straight():
 	if robotAngle.value < -5:
+		print("Turning Right")
 		turn_Right()
 	elif robotAngle.value > 5:
+		print("Turning Left")
 		turn_Left()
 	else:
+		print("Driving Straight")
 		move_Forward()
 
 def drive():
@@ -130,16 +135,17 @@ def drive():
 			print("Too close stopping")
 			stop_Motors()
 		else:
-			print("Keeping Straight")
-			#keep_straight()
-			#break
+			keep_straight()
 		
 	
-
+initialize_Motors()
 p1 = Process(target=drive)
 p1.start()
 p2 = Process(target=show_depth)
 p2.start()
+p3 = Process(target=get_gyro)
+p3.start()
 
 p1.join()
 p2.join()
+p3.join()
