@@ -54,6 +54,7 @@ def show_depth():
 	depth = depth.astype(np.uint8)
 	#cv2.imshow('Depth', depth)
 	count = cv2.countNonZero(depth)
+	print("inCount",count)
 	whiteSpace.value = count
 	print("White Pixels: ",count)
 
@@ -123,12 +124,12 @@ def keep_straight():
 
 def drive():
 	while True:
-		print("Whitness",whiteSpace.value)
+		#print("Whitness",whiteSpace.value)
 		if (whiteSpace.value > 26500):
 			print("Too close stopping")
 			stop_Motors()
 		else:
-			print("Keeping Straight")
+			#print("Keeping Straight")
 			#keep_straight()
 		if sys.stdin.read(1) == 32:
 			print("Stopping")
